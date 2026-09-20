@@ -31,34 +31,7 @@ state_title_init: subroutine
 	lda #$24
 	jsr nametable_fill
 
-/*
-	; generate patterns
-	lda #$25
-	sta PPU_ADDR
-	lda #$80
-	sta PPU_ADDR
-	ldx #$00
-.char_loop
-	stx PPU_DATA
-	inx
-	bne .char_loop
-*/
-
-	lda #$25
-	sta PPU_ADDR
-	lda #$80
-	sta PPU_ADDR
-	ldx #$00
-.pattern_loop1
-	lda chr_digits,x
-	sta PPU_DATA
-	inx
-	bne .pattern_loop1
-.pattern_loop2
-	lda chr_digits+256,x
-	sta PPU_DATA
-	inx
-	bne .pattern_loop2
+	jsr chr_load_game
 
 	jsr render_enable
 

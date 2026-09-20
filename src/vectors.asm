@@ -32,7 +32,8 @@ cart_start: subroutine
 	cli
 
 	;jsr state_title_init
-	jsr state_explore_init
+	;jsr state_explore_init
+	jsr state_level_intro_init
 
 
 .endless

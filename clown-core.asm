@@ -22,6 +22,8 @@
 	include "vectors.asm"
 	include "common.asm"
 	include "common/arctan2.asm"
+
+	include "chr_loader.asm"
 	include "palette.asm"
 
 	include "ent.asm"
@@ -31,6 +33,7 @@
 
 	include "state.asm"
 	include "states/explore.asm"
+	include "states/level_intro.asm"
 	include "states/map.asm"
 	include "states/title.asm"
 	include "states/win.asm"
