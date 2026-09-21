@@ -6,6 +6,16 @@ do_nothing: subroutine
 	rts
 
 
+sprites_clear: subroutine
+	ldx #$00
+	lda #$ff
+.loop
+	sta $200,x
+	inx
+	bne .loop
+	rts
+
+
 distance_calc: subroutine
 	; uses collision registers
 	; destroys temp00, temp01

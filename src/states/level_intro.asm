@@ -3,9 +3,15 @@ state_level_intro_init: subroutine
 
 	jsr render_disable
 	jsr main_palette_load
+	jsr chr_load_levelbox
 	jsr level_intro_draw_pattern
-	jsr chr_load_game
-	jsr chr_load_blocks
+	jsr sprites_clear
+	; setup sine pos
+	jsr rng_update
+	lda rng_val0
+	sta state00
+	lda rng_val1
+	sta state01
 	jsr render_enable
 	rts
 
@@ -21,6 +27,9 @@ state_level_intro_update: subroutine
 	sbc #240
 .scroll_good
 	sta scroll_y
+	
+	jsr level_intro_sprites_box
+
 	rts
 
 
@@ -82,7 +91,7 @@ level_intro_draw_pattern: subroutine
 
 	and #$03
 	clc
-	adc #$f8
+	adc #$e0
 	ldx li_meta_x
 	sta li_metatiles,x
 
@@ -266,3 +275,127 @@ level_intro_attr_shift_table
 	byte $00,$04,$08,$0c
 	byte $00,$10,$20,$30
 	byte $00,$40,$80,$c0
+
+
+
+
+level_intro_patterns:
+	hex c0 c1 c2 c3 c4 c5 c6 c7
+	hex d0 d1 d2 d3 d4 d5 d6 d7
+	hex e3 e3 e3 e3 e3 e3 e3 e3
+	hex f0 e3 e3 e3 e3 e3 e3 f3
+
+level_numbers_1st_sprite:
+	hex 48 4a 4c 4e 64 66 68 6a 6c 6e
+
+level_intro_sprites_box: subroutine
+	; update sine path
+	lda state00
+	clc
+	adc #$05
+	sta state00
+	tax
+	lda sine_table,x
+	shift_r 3
+	sta temp00 ; x offset
+	lda state01
+	clc
+	adc #$02
+	sta state01
+	tax
+	lda sine_table,x
+	shift_r 2
+	sta temp01 ; y offset
+	; setup basic box
+	ldx #$00
+	ldy #$00
+.box_loop
+	; p
+	lda level_intro_patterns,x
+	sta spr_p,y
+	; a
+	lda wtf
+	shift_r 4
+	and #$03
+	lda #$00
+	sta spr_a,y
+	; x
+	txa
+	and #$07
+	shift_l 3
+	clc
+	adc #$50
+	adc temp00
+	sta spr_x,y
+	; y
+	txa
+	shift_r 3
+	shift_l 3
+	clc
+	adc #$38
+	adc temp01
+	sta spr_y,y
+	; next
+	inc_y 4
+	inx
+	cpx #$20
+	bne .box_loop
+	; setup numbers
+	lda game_level
+	cmp #10
+	bcs .display_two_digits
+.display_one_digit
+	tax
+	lda level_numbers_1st_sprite,x
+	sta $24d
+	clc
+	adc #$01
+	sta $251
+	adc #$0f
+	sta $26d
+	adc #$01
+	sta $271
+	jmp .digits_done
+.display_two_digits
+.tens_digit
+	ldx #$00
+.tens_loop
+	inx
+	sec
+	sbc #10
+	cmp #10
+	bcs .tens_loop
+	sta temp00
+	lda level_numbers_1st_sprite,x
+	sta $249
+	clc
+	adc #$01
+	sta $24d
+	adc #$0f
+	sta $269
+	adc #$01
+	sta $26d
+.ones_digit
+	ldx temp00
+	lda level_numbers_1st_sprite,x
+	sta $251
+	clc
+	adc #$01
+	sta $255
+	adc #$0f
+	sta $271
+	adc #$01
+	sta $275
+.digits_done
+	; advance level
+	lda wtf
+	and #$0f
+	bne .game_level_done
+	inc game_level
+	lda game_level
+	cmp #100
+	bne .game_level_done
+	lda #$00
+	sta game_level
+.game_level_done
+	rts

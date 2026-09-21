@@ -33,7 +33,38 @@ chr_load_game: subroutine
 	rts
 
 
+chr_load_levelbox: subroutine
+	bit PPU_STATUS
+	lda #$24
+	sta PPU_ADDR
+	lda #$00
+	sta PPU_ADDR
+	ldx #$00
+.levelbox_loop0
+	lda chr_levelbox,x
+	sta PPU_DATA
+	inx
+	bne .levelbox_loop0
+.levelbox_loop1
+	lda chr_levelbox+$100,x
+	sta PPU_DATA
+	inx
+	bne .levelbox_loop1
+.levelbox_loop2
+	lda chr_levelbox+$200,x
+	sta PPU_DATA
+	inx
+	bne .levelbox_loop2
+.levelbox_loop3
+	lda chr_levelbox+$300,x
+	sta PPU_DATA
+	inx
+	bne .levelbox_loop3
+	rts
+
+
 chr_load_blocks: subroutine
+	bit PPU_STATUS
 	; block 0
 	; is blank already
 	; block 1

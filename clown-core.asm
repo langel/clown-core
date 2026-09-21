@@ -41,6 +41,8 @@
 	org $e000 
 chr_digits:
 	incbin "assets/tileset.chr"
+chr_levelbox:
+	incbin "assets/levelbox.chr"
 
 
 	;;;;; CPU VECTORS

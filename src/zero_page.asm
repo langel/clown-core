@@ -62,6 +62,9 @@ rng_val0   byte
 rng_val1   byte
 
 
+game_level    byte
+
+
 spr_a          EQM $0202
 spr_p          EQM $0201
 spr_x          EQM $0203
