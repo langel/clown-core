@@ -26,10 +26,13 @@
 	include "chr_loader.asm"
 	include "palette.asm"
 
+	include "game/init.asm"
+	include "game/update.asm"
+
 	include "ent.asm"
 	include "ent_tables.asm"
-	include "ents/ball.asm"
-	include "ents/laser.asm"
+	include "ents/clown.asm"
+	include "ents/seesaw.asm"
 
 	include "state.asm"
 	include "states/explore.asm"

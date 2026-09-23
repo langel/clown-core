@@ -35,12 +35,6 @@ state_title_init: subroutine
 
 	jsr render_enable
 
-	lda #$00
-	sta temp05
-	lda #$20
-	sta temp06
-	jsr ent_ball_spawn
-
 	rts
 
 state_title_update: subroutine
